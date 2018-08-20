@@ -39,7 +39,7 @@ PATCHES
 @@ -2100,6 +2100,11 @@ void libxl__spawn_stub_dm(libxl__egc *eg
                                     libxl__xs_get_dompath(gc, guest_domid)),
                          "%s",
-                         libxl_bios_type_to_string(LIBXL_BIOS_TYPE_SEABIOS));
+                         libxl_bios_type_to_string(guest_config->b_info.u.hvm.bios));
 +        /* OpenXT: We use legacy roms, which is disabled by default in sebios */
 +        libxl__xs_printf(gc, XBT_NULL,
 +                        libxl__sprintf(gc, "%s/hvmloader/seabios-legacy-load-roms",
@@ -51,7 +51,7 @@ PATCHES
 @@ -2124,6 +2129,12 @@ retry_transaction:
          if (errno == EAGAIN)
              goto retry_transaction;
- 
+
 +    /* OpenXT: We add the device models extended power management type to enable acpi.
 +     * We do this here since we need the permission above.
 +     */
@@ -68,9 +68,9 @@ PATCHES
 -    libxl_ctx *ctx = libxl__gc_owner(gc);
      int i, num_console = STUBDOM_SPECIAL_CONSOLES;
      libxl__device_console *console;
- 
+
 @@ -2192,21 +2202,16 @@ static void spawn_stub_launch_dm(libxl__
- 
+
      for (i = 0; i < num_console; i++) {
          console[i].devid = i;
 -        console[i].consback = LIBXL__CONSOLE_BACKEND_IOEMU;
@@ -100,9 +100,9 @@ PATCHES
      STATE_AO_GC(sdss->dm.spawn.ao);
      uint32_t dm_domid = sdss->pvqemu.guest_domid;
 -    libxl__xswait_state *xswait = &sdss->pvqemu.spawn.xswait;
- 
+
      libxl__xswait_init(&sdss->xswait);
- 
+
 @@ -2420,6 +2424,17 @@ void libxl__spawn_local_dm(libxl__egc *e
                           b_info->device_model_version==LIBXL_DEVICE_MODEL_VERSION_QEMU_XEN_TRADITIONAL &&
                           !libxl__vnuma_configured(b_info));
@@ -119,7 +119,7 @@ PATCHES
 +                         DEVICE_MODEL_XS_PATH(gc, 0, domid, "/xen_extended_power_mgmt"), "2");
 +
      }
- 
+
      path = DEVICE_MODEL_XS_PATH(gc, LIBXL_TOOLSTACK_DOMID, domid, "");
 --- a/tools/libxl/libxl_domain.c
 +++ b/tools/libxl/libxl_domain.c

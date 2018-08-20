@@ -103,7 +103,7 @@ S = "${WORKDIR}/xen-${PV}"
 
 #--
 # Override meta-virtualization's path to seabios and add ovmf:
-PACKAGECONFIG[hvm] = "--with-system-seabios="/usr/share/firmware/bios.bin --with-system-ovmf=/usr/share/firmware/ovmf.bin",--disable-seabios,seabios ipxe vgabios ovmf,"
+PACKAGECONFIG[hvm] = "--with-system-seabios="/usr/share/firmware/bios.bin" --with-system-ovmf="/usr/share/firmware/ovmf.bin",--disable-seabios,seabios ipxe vgabios ovmf,"
 
 #--
 # Modifications to the meta-virtualiation configuration (ref: OXT-1016)
