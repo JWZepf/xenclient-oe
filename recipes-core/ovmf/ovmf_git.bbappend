@@ -1,13 +1,11 @@
 FILESEXTRAPATHS_prepend := "${THISDIR}/ovmf:"
 
-SRC_URI = "git://xenbits.xen.org/ovmf.git \
-        file://0002-ovmf-update-path-to-native-BaseTools.patch \
-        file://0003-BaseTools-makefile-adjust-to-build-in-under-bitbake.patch \
-        "
+SRC_URI = "git://github.com/tianocore/edk2.git;branch=master \
+    file://0002-ovmf-update-path-to-native-BaseTools.patch \
+    file://0003-BaseTools-makefile-adjust-to-build-in-under-bitbake.patch \
+    "
 
-SRCREV="947f3737abf65fda63f3ffd97fddfa6986986868"
-
-
+SRCREV="dd4cae4d82c7477273f3da455084844db5cca0c0"
 
 GCC_VER="$(${CC} -v 2>&1 | tail -n1 | awk '{print $3}')"
 FILES_${PN} += "\
@@ -68,9 +66,6 @@ do_compile_class-target() {
     rm -rf ${S}/Build/Ovmf$OVMF_DIR_SUFFIX
     ${S}/OvmfPkg/build.sh $PARALLEL_JOBS -a $OVMF_ARCH -b RELEASE -t ${FIXED_GCCVER}
     ln ${build_dir}/FV/OVMF.fd ${WORKDIR}/ovmf/ovmf.fd
-    ln ${build_dir}/FV/OVMF_CODE.fd ${WORKDIR}/ovmf/ovmf.code.fd
-    ln ${build_dir}/FV/OVMF_VARS.fd ${WORKDIR}/ovmf/ovmf.vars.fd
-    ln ${build_dir}/${OVMF_ARCH}/Shell.efi ${WORKDIR}/ovmf/
 }
 
 do_install_class-target() {
